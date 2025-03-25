@@ -9,6 +9,7 @@ const envPayload = z.object({
 
   //#DATABASE
   DATABASE_URL: validStringSchema,
+  DIRECT_URL: validStringSchema,
 
   //#JWT
   SECRET_KEY: validStringSchema,
@@ -19,14 +20,8 @@ const envPayload = z.object({
   GOOGLE_REDIRECT_URL: validStringSchema,
 
   //#NODEMAILER
-  EMAIL: validStringSchema,
+  EMAIL_ADDRESS: validStringSchema,
   EMAIL_PASSWORD: validStringSchema,
-
-  //#MIDTRANS
-  MIDTRANS_SERVER_KEY: validStringSchema,
-  MIDTRANS_CLIENT_KEY: validStringSchema,
-  MIDTRANS_IS_PRODUCTION: validStringSchema,
-  MIDTRANS_TOKEN: validStringSchema,
 
   //#CORS
   VALID_ORIGINS: validStringSchema,
