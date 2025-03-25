@@ -29,20 +29,51 @@ model User {
     messageSent     Message[] @relation("sender")
     messageReceived Message[] @relation("receiver")
 
-    community Community[]
-
-    bannedBy   BannedUser[] @relation("bannedBy")
-    bannedUser BannedUser[]
-
-    post    Post[]
-    comment Comment[]
+    community     Community[]
+    bannedBy      BannedUser[]    @relation("bannedBy")
+    bannedUser    BannedUser[]
+    member        Member[]
+    vote          Vote[]
+    post          Post[]
+    comment       Comment[]
+    passwordReset PasswordReset[]
+    otp           Otp[]
 
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamp
     updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp
-    member    Member[]
-    vote      Vote[]
 
     @@map("user")
+}
+
+model Otp {
+    id        String   @id @default(uuid()) @db.Uuid
+    otp       String
+    used      Boolean  @default(false)
+    expiredAt DateTime @map("expired_at") @db.Timestamptz()
+
+    userId String @map("user_id") @db.Uuid
+
+    user User @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+    @@map("otp")
+}
+
+model PasswordReset {
+    id        String   @id @default(uuid(7)) @db.Uuid
+    token     String   @unique @db.Uuid
+    used      Boolean  @default(false)
+    expiredAt DateTime @map("expired_at") @db.Timestamptz()
+
+    userId String @map("user_id") @db.Uuid
+    user   User   @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+    @@map("password_reset")
 }
 
 model Follow {
