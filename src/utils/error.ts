@@ -1,3 +1,5 @@
+import type { ZodError } from 'zod';
+
 export class HttpError extends Error {
   statusCode: number;
 
@@ -6,3 +8,14 @@ export class HttpError extends Error {
     this.statusCode = statusCode;
   }
 }
+
+export function formatZodError(error: ZodError): string {
+  const errorArray = error.errors;
+
+  const formatError = errorArray.map(({ message, path: [name] }) => {
+    return `${name} ${message}`;
+  });
+
+  return formatError.join(', ');
+}
+

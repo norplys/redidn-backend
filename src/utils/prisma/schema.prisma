@@ -80,8 +80,8 @@ model Follow {
     id     String       @id @default(uuid(7)) @db.Uuid
     status FollowStatus @default(PENDING)
 
-    followerId  String @map("follower_id")
-    followingId String @map("following_id")
+    followerId  String @map("follower_id") @db.Uuid
+    followingId String @map("following_id") @db.Uuid
     follower    User   @relation("follower", fields: [followerId], references: [id])
     following   User   @relation("following", fields: [followingId], references: [id])
 
@@ -94,8 +94,8 @@ model Follow {
 model BlockedUser {
     id String @id @default(uuid(7)) @db.Uuid
 
-    blockerId String @map("blocker_id")
-    blockedId String @map("blocked_id")
+    blockerId String @map("blocker_id") @db.Uuid
+    blockedId String @map("blocked_id") @db.Uuid
     blocker   User   @relation("blocker", fields: [blockerId], references: [id])
     blocked   User   @relation("blocked", fields: [blockedId], references: [id])
 
@@ -109,8 +109,8 @@ model Message {
     content String
     seen    Boolean @default(false)
 
-    senderId   String @map("sender_id")
-    receiverId String @map("receiver_id")
+    senderId   String @map("sender_id") @db.Uuid
+    receiverId String @map("receiver_id") @db.Uuid
     sender     User   @relation("sender", fields: [senderId], references: [id])
     receiver   User   @relation("receiver", fields: [receiverId], references: [id])
 
@@ -125,8 +125,8 @@ model Member {
     status MemberStatus  @default(PENDING)
     role   CommunityRole @default(MEMBER)
 
-    communityId String    @map("community_id")
-    userId      String    @map("user_id")
+    communityId String    @map("community_id") @db.Uuid
+    userId      String    @map("user_id") @db.Uuid
     community   Community @relation(fields: [communityId], references: [id])
     user        User      @relation(fields: [userId], references: [id])
 
@@ -139,9 +139,9 @@ model Member {
 model BannedUser {
     id          String @id @default(uuid(7)) @db.Uuid
     reason      String
-    bannedById  String @map("banned_by_id")
-    userId      String @map("user_id")
-    communityId String @map("community_id")
+    bannedById  String @map("banned_by_id") @db.Uuid
+    userId      String @map("user_id") @db.Uuid
+    communityId String @map("community_id") @db.Uuid
 
     bannedBy  User      @relation("bannedBy", fields: [bannedById], references: [id])
     user      User      @relation(fields: [userId], references: [id])
@@ -162,10 +162,10 @@ model Community {
     type        CommunityType
     mature      Boolean
 
-    topicsId String @map("topics_id")
+    topicsId String @map("topics_id") @db.Uuid
     topics   Topics @relation(fields: [topicsId], references: [id])
 
-    userId     String       @map("user_id")
+    userId     String       @map("user_id") @db.Uuid
     user       User         @relation(fields: [userId], references: [id])
     member     Member[]
     bannedUser BannedUser[]
@@ -195,8 +195,8 @@ model Post {
     description String
     tags        String[]
 
-    userId      String @map("user_id")
-    communityId String @map("community_id")
+    userId      String @map("user_id") @db.Uuid
+    communityId String @map("community_id") @db.Uuid
 
     user      User      @relation(fields: [userId], references: [id])
     community Community @relation(fields: [communityId], references: [id])
@@ -217,9 +217,9 @@ model Comment {
     subComment Comment[] @relation("comment")
     vote       Vote[]
 
-    parentId  String?  @map("parent_id")
-    postId    String   @map("post_id")
-    userId    String   @map("user_id")
+    parentId  String?  @map("parent_id") @db.Uuid
+    postId    String   @map("post_id") @db.Uuid
+    userId    String   @map("user_id") @db.Uuid
     parent    Comment? @relation("comment", fields: [parentId], references: [id])
     post      Post     @relation(fields: [postId], references: [id])
     user      User     @relation(fields: [userId], references: [id])
@@ -232,9 +232,9 @@ model Comment {
 model Vote {
     id        String   @id @default(uuid(7)) @db.Uuid
     type      VoteType
-    userId    String   @map("user_id")
-    postId    String?  @map("post_id")
-    commentId String?  @map("comment_id")
+    userId    String   @map("user_id") @db.Uuid
+    postId    String?  @map("post_id") @db.Uuid
+    commentId String?  @map("comment_id") @db.Uuid
 
     user    User     @relation(fields: [userId], references: [id])
     post    Post?    @relation(fields: [postId], references: [id])
