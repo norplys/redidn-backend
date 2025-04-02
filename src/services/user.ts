@@ -35,6 +35,8 @@ async function createUser(
   const user =  await prisma.user.create({
     data: {
       ...payload,
+      // change this to false when email verification is implemented
+      verified: true,
       password
     }
   });

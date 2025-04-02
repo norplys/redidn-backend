@@ -15,4 +15,10 @@ export default function (app: Router) {
         userMiddleware.blockIfUserNameExist,
         authController.register
     );
+
+    router.post(
+        '/login',
+        authValidationMiddleware.isValidLoginPayload,
+        authController.login
+    );
 }

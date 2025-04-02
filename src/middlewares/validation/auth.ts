@@ -30,7 +30,32 @@ function isValidRegisterPayload(
   next();
 }
 
+const loginPayload = z.object({
+  email: z.string().email(),
+  password: z.string().min(6)
+}).strict();
+
+export type ValidLoginSchema = z.infer<typeof loginPayload>;
+
+function isValidLoginPayload(
+  req: Request<unknown, unknown, ValidLoginSchema>,
+  _res: Response,
+  next: NextFunction
+) {
+  const body = req.body;
+  const result = loginPayload.safeParse(body);
+
+  if (!result.success) {
+    const formattedError = formatZodError(result.error);
+
+    throw new HttpError(formattedError, 400);
+  }
+
+  next();
+}
+
 
 export const authValidationMiddleware = {
-  isValidRegisterPayload
+  isValidRegisterPayload,
+  isValidLoginPayload
 };
