@@ -81,6 +81,8 @@ async function revokeRefreshToken(req: Request, res: Response<CommonResponse>) {
 
   res.clearCookie('refreshToken');
 
+  res.clearCookie('accessToken');
+
   res.status(200).json({
     message: 'Successfully revoke refresh token'
   });
