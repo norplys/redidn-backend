@@ -3,6 +3,7 @@ import { authService } from '../services/auth.js';
 import type { ValidLoginSchema, ValidRegisterSchema } from '../middlewares/validation/auth.js';
 import type { Request, Response } from 'express';
 import type { CommonResponse } from '../utils/types/express.js';
+import type { User } from '@prisma/client';
 
 async function register(
     req: Request<unknown, unknown, ValidRegisterSchema>,
@@ -43,7 +44,37 @@ async function login(
     });
 }
 
+async function refreshAccessToken(
+    req: Request,
+    res: Response<CommonResponse, { user: User }>
+){
+    const { refreshToken } = req.cookies as { refreshToken: string | undefined };
+    const user = res.locals.user;
+
+    const {
+        accessToken,
+        refreshToken: newRefreshToken
+    } = await authService.refreshAccessToken(user, refreshToken);
+
+    res.cookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    });
+
+    res.cookie('refreshToken', newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    });
+
+    res.status(200).json({
+        message: 'Successfully refresh access token'
+    });
+}
+
 export const authController = {
     register,
-    login
+    login,
+    refreshAccessToken
 };

@@ -18,7 +18,6 @@ model User {
     password     String
     age          Int?
     phoneNumber  String? @unique @map("phone_number")
-    refreshToken String? @map("refresh_token")
 
     follower  Follow[] @relation("follower")
     following Follow[] @relation("following")
@@ -29,6 +28,7 @@ model User {
     messageSent     Message[] @relation("sender")
     messageReceived Message[] @relation("receiver")
 
+    refreshToken refreshToken[]
     community     Community[]
     bannedBy      BannedUser[]    @relation("bannedBy")
     bannedUser    BannedUser[]
@@ -43,6 +43,20 @@ model User {
     updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp
 
     @@map("user")
+}
+
+model refreshToken {
+    id        String   @id @default(uuid(7)) @db.Uuid
+    refreshToken     String   @unique @db.Uuid
+    expiredAt DateTime @map("expired_at") @db.Timestamptz()
+
+    userId String @map("user_id") @db.Uuid
+    user   User   @relation(fields: [userId], references: [id])
+
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+    @@map("refresh_token")
 }
 
 model Otp {

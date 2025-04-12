@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authValidationMiddleware } from '../middlewares/validation/auth.js';
 import { userMiddleware } from '../middlewares/user.js';
 import { authController } from '../controllers/auth.js';
+import { authMiddleware } from '../middlewares/auth.js';
 
 export default function (app: Router) {
     const router = Router();   
@@ -21,4 +22,11 @@ export default function (app: Router) {
         authValidationMiddleware.isValidLoginPayload,
         authController.login
     );
+
+    router.post(
+        '/refresh',
+        authMiddleware.isValidAccessToken,
+        authController.refreshAccessToken
+    );
+
 }
