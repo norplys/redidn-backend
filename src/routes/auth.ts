@@ -29,4 +29,9 @@ export default function (app: Router) {
         authController.refreshAccessToken
     );
 
+    router.post(
+        '/revoke',
+        authController.revokeRefreshToken
+    );
+        
 }

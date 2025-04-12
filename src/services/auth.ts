@@ -152,7 +152,7 @@ async function refreshAccessToken(
   refreshToken: string | undefined
 ) {
   if (!refreshToken) {
-    throw new HttpError('Refresh token not found', 401);
+    throw new HttpError('Missing refresh token', 401);
   }
 
   const refreshTokenExist = await prisma.refreshToken.findUnique({
@@ -188,6 +188,31 @@ async function refreshAccessToken(
   };
 }
 
+async function revokeRefreshToken(
+  refreshToken: string | undefined
+): Promise<void> {
+
+  if (!refreshToken) {
+    throw new HttpError('Missing refresh token', 401);
+  }
+
+  const refreshTokenExist = await prisma.refreshToken.findUnique({
+    where: {
+      refreshToken
+    }
+  });
+
+  if (!refreshTokenExist) {
+    throw new HttpError('Invalid refresh token', 401);
+  }
+
+  await prisma.refreshToken.delete({
+    where: {
+      refreshToken
+    }
+  });
+}
+
 export const authService = {
   signJwt,
   verifyJwt,
@@ -196,5 +221,6 @@ export const authService = {
   hashPassword,
   comparePassword,
   login,
-  refreshAccessToken
+  refreshAccessToken,
+  revokeRefreshToken
 };
