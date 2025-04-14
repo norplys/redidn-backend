@@ -159,6 +159,7 @@ async function refreshAccessToken(
     where: {
       refreshToken,
       userId: user.id,
+      revoked: false,
       expiredAt: {
         gte: new Date()
       }
@@ -191,7 +192,6 @@ async function refreshAccessToken(
 async function revokeRefreshToken(
   refreshToken: string | undefined
 ): Promise<void> {
-
   if (!refreshToken) {
     throw new HttpError('Missing refresh token', 401);
   }
@@ -206,9 +206,12 @@ async function revokeRefreshToken(
     throw new HttpError('Invalid refresh token', 401);
   }
 
-  await prisma.refreshToken.delete({
+  await prisma.refreshToken.update({
     where: {
       refreshToken
+    },
+    data: {
+      revoked: true
     }
   });
 }

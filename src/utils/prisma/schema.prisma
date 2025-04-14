@@ -8,16 +8,16 @@ datasource db {
 }
 
 model User {
-    id           String  @id @default(uuid(7)) @db.Uuid
-    email        String  @unique
-    username     String  @unique
-    name         String?
-    image        String?
-    admin        Boolean @default(false)
-    verified     Boolean @default(false)
-    password     String
-    age          Int?
-    phoneNumber  String? @unique @map("phone_number")
+    id          String  @id @default(uuid(7)) @db.Uuid
+    email       String  @unique
+    username    String  @unique
+    name        String?
+    image       String?
+    admin       Boolean @default(false)
+    verified    Boolean @default(false)
+    password    String
+    age         Int?
+    phoneNumber String? @unique @map("phone_number")
 
     follower  Follow[] @relation("follower")
     following Follow[] @relation("following")
@@ -28,7 +28,7 @@ model User {
     messageSent     Message[] @relation("sender")
     messageReceived Message[] @relation("receiver")
 
-    refreshToken refreshToken[]
+    refreshToken  refreshToken[]
     community     Community[]
     bannedBy      BannedUser[]    @relation("bannedBy")
     bannedUser    BannedUser[]
@@ -46,9 +46,10 @@ model User {
 }
 
 model refreshToken {
-    id        String   @id @default(uuid(7)) @db.Uuid
-    refreshToken     String   @unique @db.Uuid
-    expiredAt DateTime @map("expired_at") @db.Timestamptz()
+    id           String   @id @default(uuid(7)) @db.Uuid
+    refreshToken String   @unique @db.Uuid
+    revoked      Boolean  @default(false)
+    expiredAt    DateTime @map("expired_at") @db.Timestamptz()
 
     userId String @map("user_id") @db.Uuid
     user   User   @relation(fields: [userId], references: [id])
