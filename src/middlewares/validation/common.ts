@@ -2,7 +2,6 @@ import { z } from 'zod';
 import { HttpError } from '../../utils/error.js';
 import { formatZodError } from '../../utils/error.js';
 import type { CommonResponse } from '../../utils/types/express.js';
-import type { CommunityType } from '@prisma/client';
 import type { NextFunction, Request, Response } from 'express';
 
 export const validIdParamsSchema = z
