@@ -1,6 +1,7 @@
 import { Router, type Application } from 'express';
 import auth from './auth.js';
 import root from './root.js';
+import communities from './communities.js';
 
 export default function (app: Application) {
   const router = Router();
@@ -10,4 +11,5 @@ export default function (app: Application) {
   root(router);
 
   auth(router);
+  communities(router);
 }
