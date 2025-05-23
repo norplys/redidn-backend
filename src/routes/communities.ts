@@ -3,6 +3,7 @@ import { authMiddleware } from '../middlewares/auth.js';
 import { communityValidationMiddleware } from '../middlewares/validation/communities.js';
 import { communityMiddleware } from '../middlewares/community.js';
 import { communityController } from '../controllers/community.js';
+import { commonValidationMiddleware } from '../middlewares/validation/common.js';
 
 export default function (app: Router) {
   const router = Router();
@@ -15,6 +16,15 @@ export default function (app: Router) {
     communityValidationMiddleware.isValidCreateCommunityPayload,
     communityMiddleware.blockIfCommunityNameExists,
     communityController.createCommunity
-
   );
+
+  router.get(
+    '/:id',
+    authMiddleware.isAuthorizedOrNext,
+    commonValidationMiddleware.isValidIdParams,
+    communityMiddleware.getAndCheckUserAccessToCommunity,
+    communityController.getCommunityById
+  );
+
+  router.get('/', communityController.getAllCommunities);
 }

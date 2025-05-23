@@ -17,7 +17,7 @@ const createCommunitySchema = z.object({
     mature: z.boolean().optional(),
     banner: z.string().optional(),
     icon: z.string().optional(),
-    topics: z.array(z.string()).optional()
+    topics: z.array(z.string()).min(1)
 }).strict();
 
 export type ValidCreateCommunitySchema = z.infer<typeof createCommunitySchema>;
