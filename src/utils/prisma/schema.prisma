@@ -175,9 +175,9 @@ model Community {
     icon        String?
     description String?
     type        CommunityType
-    mature      Boolean        @default(false)
+    mature      Boolean       @default(false)
 
-    topics   Topics[] @relation("communitiesTopics")
+    topics Topics[] @relation("communitiesTopics")
 
     userId     String       @map("user_id") @db.Uuid
     user       User         @relation(fields: [userId], references: [id])
@@ -208,11 +208,11 @@ model Post {
     description String
     tags        String[]
 
-    userId      String @map("user_id") @db.Uuid
-    communityId String @map("community_id") @db.Uuid
+    userId      String  @map("user_id") @db.Uuid
+    communityId String? @map("community_id") @db.Uuid
 
-    user      User      @relation(fields: [userId], references: [id])
-    community Community @relation(fields: [communityId], references: [id])
+    user      User       @relation(fields: [userId], references: [id])
+    community Community? @relation(fields: [communityId], references: [id])
 
     comment Comment[]
     vote    Vote[]

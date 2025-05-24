@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import type { ValidCreateCommunitySchema } from './validation/communities.js';
 import type { Community, User } from '@prisma/client';
 import type { CommonResponse } from '../utils/types/express.js';
+import type { ValidCreatePostSchema } from './validation/posts.js';
 
 async function blockIfCommunityNameExists(
   req: Request<unknown, unknown, ValidCreateCommunitySchema>,
@@ -12,6 +13,27 @@ async function blockIfCommunityNameExists(
   const { name } = req.body;
 
   await communityService.blockIfCommunityNameExists(name);
+
+  next();
+}
+
+async function checkUserAccessToCommunity(
+  req: Request<unknown, unknown, ValidCreatePostSchema>,
+  res: Response<CommonResponse, { community: Community; user: User }>,
+  next: NextFunction
+) {
+  const body = req.body;
+  const user = res.locals.user;
+
+  if (body?.communityId) {
+    const { community: result } =
+      await communityService.getAndCheckUserAccessToCommunity(
+        user.id,
+        body?.communityId
+      );
+
+    res.locals.community = result;
+  }
 
   next();
 }
@@ -39,5 +61,6 @@ async function getAndCheckUserAccessToCommunity(
 
 export const communityMiddleware = {
   blockIfCommunityNameExists,
-  getAndCheckUserAccessToCommunity
+  getAndCheckUserAccessToCommunity,
+  checkUserAccessToCommunity
 };
