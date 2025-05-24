@@ -17,27 +17,6 @@ async function blockIfCommunityNameExists(
   next();
 }
 
-async function checkUserAccessToCommunity(
-  req: Request<unknown, unknown, ValidCreatePostSchema>,
-  res: Response<CommonResponse, { community: Community; user: User }>,
-  next: NextFunction
-) {
-  const body = req.body;
-  const user = res.locals.user;
-
-  if (body?.communityId) {
-    const { community: result } =
-      await communityService.getAndCheckUserAccessToCommunity(
-        user.id,
-        body?.communityId
-      );
-
-    res.locals.community = result;
-  }
-
-  next();
-}
-
 async function getAndCheckUserAccessToCommunity(
   req: Request<{ id: string }>,
   res: Response<
@@ -61,6 +40,5 @@ async function getAndCheckUserAccessToCommunity(
 
 export const communityMiddleware = {
   blockIfCommunityNameExists,
-  getAndCheckUserAccessToCommunity,
-  checkUserAccessToCommunity
+  getAndCheckUserAccessToCommunity
 };

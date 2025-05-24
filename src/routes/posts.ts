@@ -13,7 +13,6 @@ export default function (app: Router) {
     '/',
     authMiddleware.isAuthorized,
     postValidationMiddleware.isValidCreatePostPayload,
-    communityMiddleware.checkUserAccessToCommunity,
     postController.createPostController
   );
 }
