@@ -3,7 +3,6 @@ import type { Request, Response, NextFunction } from 'express';
 import type { ValidCreateCommunitySchema } from './validation/communities.js';
 import type { Community, User } from '@prisma/client';
 import type { CommonResponse } from '../utils/types/express.js';
-import type { ValidCreatePostSchema } from './validation/posts.js';
 
 async function blockIfCommunityNameExists(
   req: Request<unknown, unknown, ValidCreateCommunitySchema>,

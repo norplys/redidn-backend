@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { authMiddleware } from '../middlewares/auth.js';
 import { postValidationMiddleware } from '../middlewares/validation/posts.js';
-import { communityMiddleware } from '../middlewares/community.js';
 import { postController } from '../controllers/post.js';
 
 export default function (app: Router) {

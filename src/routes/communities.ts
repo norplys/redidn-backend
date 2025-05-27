@@ -26,5 +26,10 @@ export default function (app: Router) {
     communityController.getCommunityById
   );
 
+  router.post('/:id/join',
+    authMiddleware.isAuthorized,
+    commonValidationMiddleware.isValidIdParams
+  );
+
   router.get('/', communityController.getAllCommunities);
 }
