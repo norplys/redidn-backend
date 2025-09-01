@@ -170,15 +170,14 @@ model BannedUser {
 
 model Community {
     id          String        @id @default(uuid(7)) @db.Uuid
-    name        String
+    name        String        @unique
     banner      String?
     icon        String?
     description String?
     type        CommunityType
-    mature      Boolean
+    mature      Boolean       @default(false)
 
-    topicsId String @map("topics_id") @db.Uuid
-    topics   Topics @relation(fields: [topicsId], references: [id])
+    topics Topics[] @relation("communitiesTopics")
 
     userId     String       @map("user_id") @db.Uuid
     user       User         @relation(fields: [userId], references: [id])
@@ -192,10 +191,9 @@ model Community {
 
 model Topics {
     id   String @id @default(uuid(7)) @db.Uuid
-    name String
-    icon String
+    name String @unique
 
-    communities Community[]
+    communities Community[] @relation("communitiesTopics")
 
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamp
     updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp
@@ -210,11 +208,11 @@ model Post {
     description String
     tags        String[]
 
-    userId      String @map("user_id") @db.Uuid
-    communityId String @map("community_id") @db.Uuid
+    userId      String  @map("user_id") @db.Uuid
+    communityId String? @map("community_id") @db.Uuid
 
-    user      User      @relation(fields: [userId], references: [id])
-    community Community @relation(fields: [communityId], references: [id])
+    user      User       @relation(fields: [userId], references: [id])
+    community Community? @relation(fields: [communityId], references: [id])
 
     comment Comment[]
     vote    Vote[]
